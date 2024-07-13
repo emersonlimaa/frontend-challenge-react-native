@@ -157,7 +157,6 @@ const RegisterScreen = (data) => {
               error={!!errors?.vehicle}
               onBlur={onBlur}
               setState={(e) => {
-                console.log(e);
                 onChange(e);
               }}
             />
