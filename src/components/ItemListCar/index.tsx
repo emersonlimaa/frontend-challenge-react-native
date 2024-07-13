@@ -13,7 +13,9 @@ export default function ItemListCar({ data, selected, setSelected }) {
   useEffect(() => {
     const Attached = drivers.map((it) => it.vehicle.key);
     setAttached(Attached.includes(data?.id));
+    console.log(data?.id);
   }, [drivers]);
+
   return (
     <View style={{ marginTop: normalize(12), padding: 8 }}>
       <S.Content style={{ justifyContent: "space-between" }}>

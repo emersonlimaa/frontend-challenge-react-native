@@ -11,15 +11,21 @@ const HomeScreen = () => {
   const [selected, setSelected] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const getData = async () => {
-    await setData(MMKVService.list());
-  };
+  const getData = useCallback(() => {
+    setData(MMKVService.list());
+  }, []);
+
   useEffect(() => {
     getData();
   }, [MMKVService]);
 
   const navigation = useNavigation();
-
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+      setSelected(null);
+    }, [])
+  );
   return (
     <View style={{ flex: 1 }}>
       <FlatList

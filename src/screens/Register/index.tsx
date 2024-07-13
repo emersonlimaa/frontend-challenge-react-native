@@ -59,6 +59,7 @@ const RegisterScreen = (data) => {
     if (!id) {
       if (drivers.some((it) => it.cpf === objToSave.cpf)) {
         alert("CPF já cadastrado");
+        setLoading(false);
         return;
       }
       const addedObject = MMKVService.add(objToSave);

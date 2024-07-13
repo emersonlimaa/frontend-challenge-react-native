@@ -39,11 +39,11 @@ const RegisterVehicleScreen = (data) => {
     setLoading(true);
     const objToSave = {
       ...data,
-      id: `${new Date()}`,
     };
     if (!id) {
       if (vehicles.some((it) => it.licensePlate === objToSave.licensePlate)) {
         alert("Placa já cadastrada");
+        setLoading(false);
         return;
       }
       const addedObject = MMKVServiceVehicles.add(objToSave);

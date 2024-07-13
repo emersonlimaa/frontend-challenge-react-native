@@ -15,6 +15,7 @@ import { normalize } from "../../types/normalilze";
 import { Button } from "../Button";
 import { Label } from "../Label/variants";
 import { Container } from "./styles";
+import { MMKVService, MMKVServiceVehicles } from "../../config/mmkvStorage";
 
 interface IModalText {
   onChangeVisible: () => void;
@@ -43,7 +44,9 @@ export default function ModalOptions({
   setState,
 }: IModalText) {
   const theme = useTheme();
-
+  const vehicles = MMKVServiceVehicles.list();
+  const drivers = MMKVService.list();
+  const vehicleAttached = drivers.map((it) => it.vehicle.key);
   const handleClose = async () => {
     onChangeVisible();
   };
@@ -114,28 +117,34 @@ export default function ModalOptions({
                   style={{ flex: 1 }}
                   data={options}
                   showsVerticalScrollIndicator={false}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      key={item.key}
-                      style={{
-                        marginBottom: 8,
-                        borderColor: theme.colors.primary_black,
-                        borderWidth: 1,
-                        paddingVertical: 8,
-                        borderRadius: normalize(8),
-                      }}
-                      onPress={() => {
-                        if (setState) {
-                          setState(item);
-                        }
-                        handleClose();
-                      }}
-                    >
-                      <Label color={theme.colors.primary_black} fontSize={15}>
-                        {item.name}
-                      </Label>
-                    </TouchableOpacity>
-                  )}
+                  renderItem={({ item }) => {
+                    const isAttached = vehicleAttached.includes(item.key);
+
+                    return (
+                      <TouchableOpacity
+                        key={item.key}
+                        disabled={isAttached}
+                        style={{
+                          opacity: isAttached ? 0.5 : 1,
+                          marginBottom: 8,
+                          borderColor: theme.colors.primary_black,
+                          borderWidth: 1,
+                          paddingVertical: 8,
+                          borderRadius: normalize(8),
+                        }}
+                        onPress={() => {
+                          if (!isAttached && setState) {
+                            setState(item);
+                          }
+                          handleClose();
+                        }}
+                      >
+                        <Label color={theme.colors.primary_black} fontSize={15}>
+                          {item.name}
+                        </Label>
+                      </TouchableOpacity>
+                    );
+                  }}
                 />
 
                 <Button text={buttonText ?? "Ok"} onPress={onChangeVisible} />

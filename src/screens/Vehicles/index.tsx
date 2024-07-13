@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, FlatList, Alert } from "react-native";
+import { View, FlatList, Alert } from "react-native";
 import { MMKVService, MMKVServiceVehicles } from "../../config/mmkvStorage";
 import * as S from "./styles";
 import ItemListCar from "../../components/ItemListCar";
@@ -10,21 +10,27 @@ const VehiclesScreen = () => {
   const [selected, setSelected] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const getData = async () => {
-    const vehiclesData = await MMKVServiceVehicles.list();
-    setData(vehiclesData);
-  };
-
+  const getData = useCallback(() => {
+    setData(MMKVServiceVehicles.list());
+  }, []);
   useEffect(() => {
     getData();
   }, [MMKVServiceVehicles]);
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+      setSelected(null);
+    }, [])
+  );
   const navigation = useNavigation();
   const [attached, setAttached] = useState(false);
   const drivers = MMKVService.list();
+
   useEffect(() => {
     const Attached = drivers.map((it) => it.vehicle.key);
     setAttached(Attached.includes(selected?.id));
   }, [drivers]);
+
   return (
     <View style={{ flex: 1 }}>
       <FlatList
