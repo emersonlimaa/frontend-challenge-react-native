@@ -50,6 +50,11 @@ const RegisterVehicleScreen = (data) => {
       setId(addedObject.id ?? "");
       navigation.navigate("Main" as never);
     } else {
+      if (vehicles.some((it) => it.licensePlate === objToSave.licensePlate)) {
+        alert("Placa já cadastrada");
+        setLoading(false);
+        return;
+      }
       const objToUpdate = {
         ...MMKVServiceVehicles.get(id),
         ...objToSave,

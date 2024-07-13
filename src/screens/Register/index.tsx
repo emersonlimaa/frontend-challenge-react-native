@@ -66,6 +66,11 @@ const RegisterScreen = (data) => {
       setId(addedObject.id ?? "");
       navigation.navigate("Main" as never);
     } else {
+      if (drivers.some((it) => it.cpf === objToSave.cpf)) {
+        alert("CPF já cadastrado");
+        setLoading(false);
+        return;
+      }
       const objToUpdate = {
         ...MMKVService.get(id),
         ...objToSave,
