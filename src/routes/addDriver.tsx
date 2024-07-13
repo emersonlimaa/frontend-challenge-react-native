@@ -16,7 +16,7 @@ export function AddDriverStack() {
         name="registerScreen"
         component={RegisterScreen}
         options={{
-          title: "Criar",
+          title: "Cadastrar motorista",
           headerShown: true,
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>

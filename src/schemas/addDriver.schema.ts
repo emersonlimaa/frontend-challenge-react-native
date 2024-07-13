@@ -41,5 +41,8 @@ export const schemaDriver = yup.object().shape({
     return true
   })
   .required(),
-  vehicle: yup.string(),
+  vehicle: yup.object({
+    name: yup.string().required(), 
+    key: yup.string().required(),
+  })
 })

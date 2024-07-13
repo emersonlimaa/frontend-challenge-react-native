@@ -1,19 +1,19 @@
-import { TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 import { normalize } from "../../types/normalilze";
 import theme from "../../theme";
-import moment from "moment";
 import * as S from "./styles";
-import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
-interface IItemList {
-  data: any;
-  selected: boolean;
-  setSelected: () => void;
-}
-export default function ItemList({ data, selected, setSelected }: IItemList) {
-  const attached = data.vehicle;
+import { MMKVService } from "../../config/mmkvStorage";
 
+export default function ItemListCar({ data, selected, setSelected }) {
+  const [attached, setAttached] = useState(false);
+  const drivers = MMKVService.list();
+
+  useEffect(() => {
+    const Attached = drivers.map((it) => it.vehicle.key);
+    setAttached(Attached.includes(data?.id));
+  }, [drivers]);
   return (
     <View style={{ marginTop: normalize(12), padding: 8 }}>
       <S.Content style={{ justifyContent: "space-between" }}>
@@ -22,28 +22,27 @@ export default function ItemList({ data, selected, setSelected }: IItemList) {
             {selected ? (
               <FontAwesome
                 name="check-square"
-                color={theme.colors.primary_black}
+                color={theme.colors.primary_blue}
                 size={20}
               />
             ) : (
               <FontAwesome
                 name="square-o"
-                color={theme.colors.primary_blue}
+                color={theme.colors.primary_black}
                 size={22}
               />
             )}
           </S.Checkbox>
           <S.DescriptionView>
-            <S.Description>{data.name}</S.Description>
-            <S.Description>{data.cpf}</S.Description>
+            <S.Description>Modelo: {data?.model}</S.Description>
+            <S.Description>Placa: {data?.licensePlate}</S.Description>
           </S.DescriptionView>
         </S.Content>
-
         <S.ContentAttached>
           {attached ? (
             <S.Attached>Sim</S.Attached>
           ) : (
-            <S.Description>Não</S.Description>
+            <S.Attached>Não</S.Attached>
           )}
         </S.ContentAttached>
       </S.Content>

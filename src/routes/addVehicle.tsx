@@ -17,7 +17,7 @@ export function AddVehicleStack() {
         name="registerVehicleScreen"
         component={RegisterVehicleScreen}
         options={{
-          title: "Criar",
+          title: "Cadastrar veículos",
           headerShown: true,
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>

@@ -24,7 +24,12 @@ interface IModalText {
   loading: boolean;
   buttonText?: string;
   options?: Array<{ key: string; name: string }>;
-  setState?: React.Dispatch<React.SetStateAction<string>>;
+  setState?: React.Dispatch<
+    React.SetStateAction<{
+      key: string;
+      name: string;
+    }>
+  >;
 }
 
 export default function ModalOptions({
@@ -121,7 +126,7 @@ export default function ModalOptions({
                       }}
                       onPress={() => {
                         if (setState) {
-                          setState(item.name);
+                          setState(item);
                         }
                         handleClose();
                       }}

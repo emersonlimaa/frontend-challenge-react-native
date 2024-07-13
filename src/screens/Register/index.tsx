@@ -1,33 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, KeyboardAvoidingView } from "react-native";
 import { Input } from "../../components/Input";
 import * as S from "./styles";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Controller, useForm } from "react-hook-form";
-import { schemaDriver } from "../../services/addDriver.schema";
+import { schemaDriver } from "../../schemas/addDriver.schema";
 import { InputButton } from "../../components/InputButton";
 import { Button } from "../../components/Button";
-import { MMKVService } from "../../config/mmkvStorage";
+import { MMKVService, MMKVServiceVehicles } from "../../config/mmkvStorage";
 import { useNavigation } from "@react-navigation/native";
 
 interface PropsForm {
   name: string;
   cpf: string;
-  vehicle: string;
+  vehicle: {
+    name: string;
+    key: string;
+  };
 }
 
 const RegisterScreen = (data) => {
+  const dataId = data.route.params?.id;
   const [vehicles, setVehicles] = useState<{ name: string; key: string }[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [id, setId] = useState(data.route.params.id);
+  const [id, setId] = useState(dataId ?? null);
   const [hasData] = useState(id ? MMKVService.get(id) : undefined);
+  const drivers = MMKVService.list();
   const {
     control,
     formState: { errors },
     trigger,
     getValues,
-    setValue,
     handleSubmit,
   } = useForm({
     resolver: yupResolver(schemaDriver),
@@ -35,18 +39,28 @@ const RegisterScreen = (data) => {
     defaultValues: {
       name: hasData?.name ?? "",
       cpf: hasData?.cpf ?? "",
-      vehicle: hasData?.vehicle ?? "",
+      vehicle: hasData?.vehicle ?? {},
     },
   });
+  useEffect(() => {
+    const data = MMKVServiceVehicles.list();
+    const vehicleData = data.map((it) => {
+      return { name: it.model, key: it.id };
+    });
+    setVehicles(vehicleData);
+  }, []);
 
   const navigation = useNavigation();
   const onSubmit = async (data: PropsForm) => {
     setLoading(true);
     const objToSave = {
       ...data,
-      id: `${new Date()}`,
     };
     if (!id) {
+      if (drivers.some((it) => it.cpf === objToSave.cpf)) {
+        alert("CPF já cadastrado");
+        return;
+      }
       const addedObject = MMKVService.add(objToSave);
       setId(addedObject.id ?? "");
       navigation.navigate("Main" as never);
@@ -129,14 +143,15 @@ const RegisterScreen = (data) => {
           name="vehicle"
           render={({ field: { onChange, onBlur, value } }) => (
             <InputButton
-              message="Selecione a unidade do evento"
+              message="Selecione um carro"
               options={vehicles}
               noEditable={vehicles.length === 0}
               hasValidation
-              value={value}
+              value={value.name}
               error={!!errors?.vehicle}
               onBlur={onBlur}
               setState={(e) => {
+                console.log(e);
                 onChange(e);
               }}
             />
@@ -145,6 +160,7 @@ const RegisterScreen = (data) => {
         <S.LineLabel>
           <Button
             text="Guardar"
+            loading={loading}
             onPress={handleSubmit(onSubmit)}
             disabled={loading}
           />

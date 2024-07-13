@@ -23,7 +23,12 @@ interface Props extends TextInputProps {
   noEditable?: boolean;
   label?: string;
   hasUpAndDown?: boolean;
-  setState?: React.Dispatch<React.SetStateAction<string>>;
+  setState?: React.Dispatch<
+    React.SetStateAction<{
+      key: string;
+      name: string;
+    }>
+  >;
   options?: Array<{ key: string; name: string }>;
   message: string;
   required?: boolean;

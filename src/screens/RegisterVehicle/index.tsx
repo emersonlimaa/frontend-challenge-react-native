@@ -1,37 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, KeyboardAvoidingView } from "react-native";
 import { Input } from "../../components/Input";
 import * as S from "./styles";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Controller, useForm } from "react-hook-form";
-import { schemaVehicle } from "../../services/addVehicle.schema";
+import { schemaVehicle } from "../../schemas/addVehicle.schema";
 import { Button } from "../../components/Button";
-import { MMKVService } from "../../config/mmkvStorage";
+import { MMKVServiceVehicles } from "../../config/mmkvStorage";
 import { useNavigation } from "@react-navigation/native";
-
 interface PropsForm {
-  name: string;
-  cpf: string;
-  vehicle: string;
+  model: string;
+  driver: string;
+  licensePlate: string;
 }
 
 const RegisterVehicleScreen = (data) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [id, setId] = useState(data.route.params?.id ?? "");
-  const [hasData] = useState(id ? MMKVService.get(id) : undefined);
+  const [hasData] = useState(id ? MMKVServiceVehicles.get(id) : undefined);
+  const vehicles = MMKVServiceVehicles.list();
   const {
     control,
     formState: { errors },
     trigger,
-    getValues,
-    setValue,
     handleSubmit,
   } = useForm({
     resolver: yupResolver(schemaVehicle),
     mode: "onBlur",
     defaultValues: {
-      name: hasData?.name ?? "",
+      model: hasData?.model ?? "",
+      licensePlate: hasData?.licensePlate ?? "",
     },
   });
 
@@ -43,15 +42,19 @@ const RegisterVehicleScreen = (data) => {
       id: `${new Date()}`,
     };
     if (!id) {
-      const addedObject = MMKVService.add(objToSave);
+      if (vehicles.some((it) => it.licensePlate === objToSave.licensePlate)) {
+        alert("Placa já cadastrada");
+        return;
+      }
+      const addedObject = MMKVServiceVehicles.add(objToSave);
       setId(addedObject.id ?? "");
       navigation.navigate("Main" as never);
     } else {
       const objToUpdate = {
-        ...MMKVService.get(id),
+        ...MMKVServiceVehicles.get(id),
         ...objToSave,
       };
-      MMKVService.update(id, objToUpdate as any);
+      MMKVServiceVehicles.update(id, objToUpdate as any);
       setId(id);
       navigation.navigate("Main" as never);
     }
@@ -61,10 +64,10 @@ const RegisterVehicleScreen = (data) => {
   return (
     <KeyboardAvoidingView>
       <S.Content>
-        <S.Text>Nome</S.Text>
+        <S.Text>Modelo</S.Text>
         <Controller
           control={control}
-          name="name"
+          name="model"
           render={({ field: { onChange, onBlur, value } }) => (
             <Input
               autoCorrect={false}
@@ -72,17 +75,37 @@ const RegisterVehicleScreen = (data) => {
               hasValidation
               onBlur={() => {
                 onBlur();
-                trigger(["name"]);
+                trigger(["model"]);
               }}
               onChangeText={(e) => {
                 onChange(e);
               }}
-              error={!!errors?.name}
+              error={!!errors?.model}
               required
             />
           )}
         />
-        <S.Text>CPF</S.Text>
+        <S.Text>Placa do carro</S.Text>
+        <Controller
+          control={control}
+          name="licensePlate"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              autoCorrect={false}
+              value={value}
+              hasValidation
+              onBlur={() => {
+                onBlur();
+                trigger(["licensePlate"]);
+              }}
+              onChangeText={(e) => {
+                onChange(e);
+              }}
+              error={!!errors?.licensePlate}
+              required
+            />
+          )}
+        />
 
         <S.LineLabel>
           <Button
