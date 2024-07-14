@@ -66,7 +66,10 @@ const RegisterScreen = (data) => {
       setId(addedObject.id ?? "");
       navigation.navigate("Main" as never);
     } else {
-      if (drivers.some((it) => it.cpf === objToSave.cpf)) {
+      if (
+        hasData?.cpf !== getValues("cpf") &&
+        drivers.some((it) => it.cpf === objToSave.cpf)
+      ) {
         alert("CPF já cadastrado");
         setLoading(false);
         return;
