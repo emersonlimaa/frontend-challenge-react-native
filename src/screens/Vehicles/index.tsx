@@ -5,6 +5,11 @@ import * as S from "./styles";
 import ItemListCar from "../../components/ItemListCar";
 import ModalConfirm from "../../components/ModalConfirm";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import {
+  AddVehicleStackNavigationProp,
+  RootStackNavigationProp,
+} from "../../models/routes";
+
 const VehiclesScreen = () => {
   const [data, setData] = useState(MMKVServiceVehicles.list());
   const [selected, setSelected] = useState(null);
@@ -22,7 +27,7 @@ const VehiclesScreen = () => {
       setSelected(null);
     }, [])
   );
-  const navigation = useNavigation();
+  const navigation = useNavigation<RootStackNavigationProp>();
   const [attached, setAttached] = useState(false);
   const drivers = MMKVService.list();
 
@@ -83,9 +88,7 @@ const VehiclesScreen = () => {
             onPress={() => {
               navigation.navigate("AddVehicleStack", {
                 screen: "registerVehicleScreen",
-                params: {
-                  id: selected.id,
-                },
+                params: { id: selected.id },
               });
             }}
           >

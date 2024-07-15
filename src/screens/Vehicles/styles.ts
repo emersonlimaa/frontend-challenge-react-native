@@ -14,8 +14,8 @@ export const Header = styled.View`
 `;
 export const HeaderItem = styled.View<{width}>`
   ${({ width }) => css`
-    padding: ${({theme}) => theme.fontSizes.XS}px;
-    height: 40;
+    padding: ${({theme}) => theme.fontSizes.MD}px;
+    height: 60;
     width: ${width}%;
   `}
 `;

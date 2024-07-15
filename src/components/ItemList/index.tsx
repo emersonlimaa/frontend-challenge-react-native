@@ -3,12 +3,13 @@ import { normalize } from "../../types/normalilze";
 import theme from "../../theme";
 import * as S from "./styles";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-interface IItemList {
-  data: any;
-  selected: boolean;
-  setSelected: () => void;
-}
-export default function ItemList({ data, selected, setSelected }: IItemList) {
+import { IItemListDriver } from "../../models/Itemlist";
+
+export default function ItemList({
+  data,
+  selected,
+  setSelected,
+}: IItemListDriver) {
   const attached = Object.keys(data.vehicle).length > 0;
   return (
     <View style={{ marginTop: normalize(12), padding: 8 }}>

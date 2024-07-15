@@ -9,11 +9,7 @@ import { schemaVehicle } from "../../schemas/addVehicle.schema";
 import { Button } from "../../components/Button";
 import { MMKVServiceVehicles } from "../../config/mmkvStorage";
 import { useNavigation } from "@react-navigation/native";
-interface PropsForm {
-  model: string;
-  driver: string;
-  licensePlate: string;
-}
+import { IFormAddVehicle } from "../../models/Forms";
 
 const RegisterVehicleScreen = (data) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,7 +31,7 @@ const RegisterVehicleScreen = (data) => {
   });
 
   const navigation = useNavigation();
-  const onSubmit = async (data: PropsForm) => {
+  const onSubmit = async (data: IFormAddVehicle) => {
     setLoading(true);
     const objToSave = {
       ...data,

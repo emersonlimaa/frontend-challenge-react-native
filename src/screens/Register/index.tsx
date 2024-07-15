@@ -10,15 +10,7 @@ import { InputButton } from "../../components/InputButton";
 import { Button } from "../../components/Button";
 import { MMKVService, MMKVServiceVehicles } from "../../config/mmkvStorage";
 import { useNavigation } from "@react-navigation/native";
-
-interface PropsForm {
-  name: string;
-  cpf: string;
-  vehicle: {
-    name: string;
-    key: string;
-  };
-}
+import { IFormAddDriver } from "../../models/Forms";
 
 const RegisterScreen = (data) => {
   const dataId = data.route.params?.id;
@@ -51,7 +43,7 @@ const RegisterScreen = (data) => {
   }, []);
 
   const navigation = useNavigation();
-  const onSubmit = async (data: PropsForm) => {
+  const onSubmit = async (data: IFormAddDriver) => {
     setLoading(true);
     const objToSave = {
       ...data,

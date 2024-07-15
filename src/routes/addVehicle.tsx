@@ -6,11 +6,16 @@ import { Alert, TouchableOpacity } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import RegisterVehicleScreen from "../screens/RegisterVehicle";
+import {
+  AddVehicleStackNavigationProp,
+  AddVehicleStackParamList,
+} from "../models/routes";
 
-const { Navigator, Screen } = createNativeStackNavigator<any>();
+const { Navigator, Screen } =
+  createNativeStackNavigator<AddVehicleStackParamList>(); // Use the type
 
 export function AddVehicleStack() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<AddVehicleStackNavigationProp>();
   return (
     <Navigator screenOptions={{ animation: "ios" }}>
       <Screen

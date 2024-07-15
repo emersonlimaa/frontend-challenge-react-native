@@ -5,8 +5,13 @@ import * as S from "./styles";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
 import { MMKVService } from "../../config/mmkvStorage";
+import { IItemListVehicle } from "../../models/Itemlist";
 
-export default function ItemListCar({ data, selected, setSelected }) {
+export default function ItemListCar({
+  data,
+  selected,
+  setSelected,
+}: IItemListVehicle) {
   const [attached, setAttached] = useState(false);
   const drivers = MMKVService.list();
 

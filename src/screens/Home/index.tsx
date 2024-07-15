@@ -5,6 +5,7 @@ import { MMKVService } from "../../config/mmkvStorage";
 import ItemList from "../../components/ItemList";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import ModalConfirm from "../../components/ModalConfirm";
+import { RootStackNavigationProp } from "../../models/routes";
 
 const HomeScreen = () => {
   const [data, setData] = useState(MMKVService.list());
@@ -19,7 +20,7 @@ const HomeScreen = () => {
     getData();
   }, [MMKVService]);
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<RootStackNavigationProp>();
   useFocusEffect(
     useCallback(() => {
       getData();
